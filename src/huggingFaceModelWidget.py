@@ -52,8 +52,12 @@ class HuggingFaceModelWidget(QWidget):
         self.__hf_class = HuggingFaceModelClass()
         models = self.__hf_class.getAllInstalledModel()
 
+        if len(models) == 0:
+            self.__delBtn.setEnabled(False)
+
         self.__modelTableWidget = HuggingFaceModelTableWidget()
         self.__modelTableWidget.addModels(models)
+        self.__modelTableWidget.currentItemChanged.connect(self.__currentItemChanged)
 
         self.__totalSizeLbl = QLabel(f'{self.__total_size_prefix} {self.__hf_class.getTotalSize()}')
         self.__totalSizeLbl.setAlignment(Qt.AlignRight)
@@ -82,8 +86,15 @@ class HuggingFaceModelWidget(QWidget):
     def __deleteClicked(self):
         self.__hf_class.removeHuggingFaceModel(self.__modelTableWidget.getCurrentRowModelName())
         self.__modelTableWidget.removeRow(self.__modelTableWidget.currentRow())
-
         self.__totalSizeLbl.setText(f'{self.__total_size_prefix} {self.__hf_class.getTotalSize()}')
+
+        self.__delBtn.setEnabled(False)
+
+    def __currentItemChanged(self, cur_item, prev_item):
+        if cur_item:
+            self.__delBtn.setEnabled(True)
+        else:
+            self.__delBtn.setEnabled(False)
 
 
 if __name__ == '__main__':

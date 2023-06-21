@@ -48,6 +48,8 @@ class HuggingFaceModelTableWidget(QTableWidget):
             hyperlink_tag = f'<a href="https://huggingface.co/{model_id}">Link</a>'
             self.set_hyperlink(cur_table_idx, 2, hyperlink_tag)
 
+            self.setCurrentItem(model_id_item)
+
         self.resizeColumnsToContents()
         self.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
