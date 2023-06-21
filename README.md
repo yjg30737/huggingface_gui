@@ -23,8 +23,8 @@ Press "Add" button to add new model. Dialog will pop up. You can enter the model
 
 After you successfully install the model, dialog will close and you can see the installed model in the current model tables.
 
-If it is not successful, error message box will pop up.  
+If installation is not successful, error message box will pop up.  
 
 Press "Delete" button will delete the selected model on the table.
 
-You can see the total sizes of the huggingface model you installed.
+You can see the total sizes of the huggingface model you installed from the bottom of the table.
