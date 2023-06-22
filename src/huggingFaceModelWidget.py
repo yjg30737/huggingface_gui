@@ -110,9 +110,17 @@ class HuggingFaceModelWidget(QWidget):
         return cur_model_name
 
     def getCurrentModelObject(self):
+        """
+        after called this, you should use from_pretrained
+        :return:
+        """
         return self.__hf_class.getModelObject(self.getCurrentModelName())
 
     def getCertainModelObject(self, model_name):
+        """
+        after called this, you should use from_pretrained
+        :return:
+        """
         return self.__hf_class.getModelObject(model_name)
 
 
