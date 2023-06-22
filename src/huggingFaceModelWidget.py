@@ -9,7 +9,7 @@ project_root = os.path.dirname(os.path.dirname(script_path))
 sys.path.insert(0, project_root)
 sys.path.insert(0, os.getcwd())  # Add the current directory as well
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, \
     QPushButton, QDialog, QMessageBox
@@ -20,8 +20,9 @@ from src.huggingFaceModelTableWidget import HuggingFaceModelTableWidget
 
 QApplication.setWindowIcon(QIcon('hf-logo.svg'))
 
-
 class HuggingFaceModelWidget(QWidget):
+    onModelSelected = pyqtSignal(str)
+
     def __init__(self, certain_models=None, parent=None):
         super(HuggingFaceModelWidget, self).__init__(parent)
         self.__initVal(certain_models)
@@ -86,17 +87,27 @@ class HuggingFaceModelWidget(QWidget):
 
     def __deleteClicked(self):
         self.__hf_class.removeHuggingFaceModel(self.__modelTableWidget.getCurrentRowModelName())
-        self.__modelTableWidget.removeRow(self.__modelTableWidget.currentRow())
+        cur_row = self.__modelTableWidget.currentRow()
+        self.__modelTableWidget.removeRow(cur_row)
         self.__totalSizeLbl.setText(f'{self.__total_size_prefix} {self.__hf_class.getModelsSize(self.__certain_models)}')
-
-        self.__delBtn.setEnabled(False)
+        self.__modelTableWidget.setCurrentCell(max(0, min(cur_row, self.__modelTableWidget.rowCount()-1)), 0)
+        self.__delBtn.setEnabled(self.__modelTableWidget.rowCount() != 0)
 
     def __currentCellChanged(self, currentRow, currentColumn, previousRow, previousColumn):
         cur_item = self.__modelTableWidget.item(currentRow, 0)
         if cur_item:
             self.__delBtn.setEnabled(True)
+            cur_model_name = cur_item.text()
+            self.onModelSelected.emit(cur_model_name)
         else:
             self.__delBtn.setEnabled(False)
+
+    def getCurrentModel(self):
+        cur_item = self.__modelTableWidget.item(self.__modelTableWidget.currentRow(), 0)
+        cur_model_name = ''
+        if cur_item:
+            cur_model_name = cur_item.text()
+        return cur_model_name
 
 
 if __name__ == '__main__':
