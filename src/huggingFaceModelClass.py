@@ -41,7 +41,7 @@ class HuggingFaceModelClass:
             certain_models_size = sum(list(map(lambda x: x['size_on_disk'], self.getModels(certain_models))))
             return format_size(certain_models_size)
 
-    def getHuggingFaceModel(self, model_name):
+    def installHuggingFaceModel(self, model_name):
         try:
             config = AutoConfig.from_pretrained(model_name)
 
