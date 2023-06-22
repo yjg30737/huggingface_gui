@@ -43,18 +43,8 @@ class HuggingFaceModelClass:
 
     def installHuggingFaceModel(self, model_name):
         try:
-            config = AutoConfig.from_pretrained(model_name)
-
-            class_name = config.architectures[0]
-
-            # Import the module dynamically
-            module = importlib.import_module('transformers')
-
-            # Retrieve the class object from the module
-            model_class = getattr(module, class_name)
-
+            model_class = self.__retrieveModelClassByNameDynamically(model_name)
             model_class.from_pretrained(model_name)
-
             return [obj for obj in self.getModels() if obj['id'] == model_name]
         except Exception as e:
             raise Exception(e)
@@ -74,3 +64,15 @@ class HuggingFaceModelClass:
         except Exception as e:
             print(e)
             return ''
+
+    def __retrieveModelClassByNameDynamically(self, model_name: str):
+        config = AutoConfig.from_pretrained(model_name)
+        class_name = config.architectures[0]
+        # Import the module dynamically
+        module = importlib.import_module('transformers')
+        # Retrieve the class object from the module
+        model_class = getattr(module, class_name)
+        return model_class
+
+    def getModelObject(self, model_name: str):
+        return self.__retrieveModelClassByNameDynamically(model_name)
