@@ -18,7 +18,7 @@ class InstallModelThread(QThread):
             if self.__model_name_to_install in [model['id'] for model in self.__hf_class.getModels()]:
                 raise Exception('Model already exists.')
             else:
-                self.installFinished.emit(self.__hf_class.installHuggingFaceModel(self.__model_name_to_install)[0])
+                self.installFinished.emit(self.__hf_class.getHuggingFaceModel(self.__model_name_to_install)[0])
         except Exception as e:
             self.installFailed.emit(str(e))
 

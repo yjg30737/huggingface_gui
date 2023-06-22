@@ -102,12 +102,19 @@ class HuggingFaceModelWidget(QWidget):
         else:
             self.__delBtn.setEnabled(False)
 
-    def getCurrentModel(self):
+    def getCurrentModelName(self):
         cur_item = self.__modelTableWidget.item(self.__modelTableWidget.currentRow(), 0)
         cur_model_name = ''
         if cur_item:
             cur_model_name = cur_item.text()
         return cur_model_name
+
+    def getCurrentModelObject(self):
+        cur_model_name = self.getCurrentModelName()
+        if cur_model_name:
+            return self.__hf_class.getHuggingFaceModel(cur_model_name)
+        else:
+            return ''
 
 
 if __name__ == '__main__':
