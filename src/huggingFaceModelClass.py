@@ -28,19 +28,8 @@ class HuggingFaceModelClass:
         return [{"id":i.repo_id, "size_on_disk": i.size_on_disk, "size_on_disk_str":i.size_on_disk_str}
                                       for i in scan_cache_dir().repos]
 
-    def getCertainModels(self, models: list):
-        """
-        :param models: array of model id
-        :return: { 'id': id, 'size_on_disk': size_on_disk, 'size_on_disk_str': size_on_disk_str }
-        """
-        return list(filter(lambda x: x['id'] in models, self.getAllInstalledModel())) if len(models) > 0 else models
-
     def getTotalSize(self):
         return scan_cache_dir().size_on_disk_str
-
-    def getCertainModelsSize(self, models: list):
-        total = sum(list(map(lambda x: x['size_on_disk'], self.getCertainModels(models))))
-        return format_size(total)
 
     def installHuggingFaceModel(self, model_name):
         try:
