@@ -1,4 +1,4 @@
-# pyqt_huggingface_gui
+# huggingface_gui
 Manage HuggingFace models with Python desktop app
 
 Maybe it's only me but managing HuggingFace models is kind hard job to do, especially someone who is not friendly with CUI.
