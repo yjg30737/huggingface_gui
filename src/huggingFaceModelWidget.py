@@ -22,12 +22,13 @@ QApplication.setWindowIcon(QIcon('hf-logo.svg'))
 
 
 class HuggingFaceModelWidget(QWidget):
-    def __init__(self):
-        super(HuggingFaceModelWidget, self).__init__()
-        self.__initVal()
+    def __init__(self, certain_models=None, parent=None):
+        super(HuggingFaceModelWidget, self).__init__(parent)
+        self.__initVal(certain_models)
         self.__initUi()
 
-    def __initVal(self):
+    def __initVal(self, certain_models):
+        self.__certain_models = certain_models
         self.__total_size_prefix = 'Total:'
 
     def __initUi(self):
@@ -50,16 +51,16 @@ class HuggingFaceModelWidget(QWidget):
         menuWidget.setLayout(lay)
 
         self.__hf_class = HuggingFaceModelClass()
-        models = self.__hf_class.getAllInstalledModel()
+        models = self.__hf_class.getModels(self.__certain_models)
 
         if len(models) == 0:
             self.__delBtn.setEnabled(False)
 
         self.__modelTableWidget = HuggingFaceModelTableWidget()
         self.__modelTableWidget.addModels(models)
-        self.__modelTableWidget.currentItemChanged.connect(self.__currentItemChanged)
+        self.__modelTableWidget.currentCellChanged.connect(self.__currentCellChanged)
 
-        self.__totalSizeLbl = QLabel(f'{self.__total_size_prefix} {self.__hf_class.getTotalSize()}')
+        self.__totalSizeLbl = QLabel(f'{self.__total_size_prefix} {self.__hf_class.getModelsSize(self.__certain_models)}')
         self.__totalSizeLbl.setAlignment(Qt.AlignRight)
 
         lay = QVBoxLayout()
@@ -79,18 +80,19 @@ class HuggingFaceModelWidget(QWidget):
                 model = dialog.getModel()
                 # add model in the table
                 self.__modelTableWidget.addModels([model])
-                self.__totalSizeLbl.setText(f'{self.__total_size_prefix} {self.__hf_class.getTotalSize()}')
+                self.__totalSizeLbl.setText(f'{self.__total_size_prefix} {self.__hf_class.getModelsSize(self.__certain_models)}')
             except Exception as e:
                 QMessageBox.critical(self, "Error", str(e))
 
     def __deleteClicked(self):
         self.__hf_class.removeHuggingFaceModel(self.__modelTableWidget.getCurrentRowModelName())
         self.__modelTableWidget.removeRow(self.__modelTableWidget.currentRow())
-        self.__totalSizeLbl.setText(f'{self.__total_size_prefix} {self.__hf_class.getTotalSize()}')
+        self.__totalSizeLbl.setText(f'{self.__total_size_prefix} {self.__hf_class.getModelsSize(self.__certain_models)}')
 
         self.__delBtn.setEnabled(False)
 
-    def __currentItemChanged(self, cur_item, prev_item):
+    def __currentCellChanged(self, currentRow, currentColumn, previousRow, previousColumn):
+        cur_item = self.__modelTableWidget.item(currentRow, 0)
         if cur_item:
             self.__delBtn.setEnabled(True)
         else:

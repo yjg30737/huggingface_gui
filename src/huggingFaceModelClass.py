@@ -24,12 +24,22 @@ class HuggingFaceModelClass:
     def __init__(self):
         super(HuggingFaceModelClass, self).__init__()
 
-    def getAllInstalledModel(self):
-        return [{"id":i.repo_id, "size_on_disk": i.size_on_disk, "size_on_disk_str":i.size_on_disk_str}
-                                      for i in scan_cache_dir().repos]
+    def getModels(self, certain_models=None):
+        models = [{"id": i.repo_id, "size_on_disk": i.size_on_disk, "size_on_disk_str": i.size_on_disk_str}
+                    for i in scan_cache_dir().repos]
+        if certain_models is None:
+            return models
+        else:
+            return list(filter(lambda x: x['id'] in certain_models, models)) if len(
+                certain_models) > 0 else certain_models
 
-    def getTotalSize(self):
-        return scan_cache_dir().size_on_disk_str
+    def getModelsSize(self, certain_models=None):
+        models_size = scan_cache_dir().size_on_disk_str
+        if certain_models is None:
+            return models_size
+        else:
+            certain_models_size = sum(list(map(lambda x: x['size_on_disk'], self.getModels(certain_models))))
+            return format_size(certain_models_size)
 
     def installHuggingFaceModel(self, model_name):
         try:
@@ -45,7 +55,7 @@ class HuggingFaceModelClass:
 
             model_class.from_pretrained(model_name)
 
-            return [obj for obj in self.getAllInstalledModel() if obj['id'] == model_name]
+            return [obj for obj in self.getModels() if obj['id'] == model_name]
         except Exception as e:
             raise Exception(e)
 
