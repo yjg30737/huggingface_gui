@@ -14,6 +14,7 @@ setup(
     author_email='yjg30737@gmail.com',
     license='MIT',
     packages=find_packages(),
+    package_data={'huggingface_gui': ['hf-logo.svg']},
     description='Manage HuggingFace models with Python desktop app',
     url='https://github.com/yjg30737/huggingface-gui.git',
     long_description_content_type='text/markdown',
