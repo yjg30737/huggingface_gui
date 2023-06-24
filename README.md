@@ -5,6 +5,8 @@ Maybe it's only me but managing HuggingFace models is kind hard job to do, espec
 
 This app let you install and delete any huggingface models (as far as i know) with a GUI.
 
+Note: This doesn't work in text2image model in particular. I will fix it soon enough
+
 ## Requirements
 * PyQt5 >= 5.14
 * huggingface_hub
