@@ -41,6 +41,13 @@ class HuggingFaceModelClass:
             certain_models_size = sum(list(map(lambda x: x['size_on_disk'], self.getModels(certain_models))))
             return format_size(certain_models_size)
 
+    def is_model_exists(self, model_name):
+        cache_dir_result = scan_cache_dir()
+        for i in cache_dir_result.repos:
+            if model_name == i.repo_id:
+                return True
+        return False
+
     def installHuggingFaceModel(self, model_name, model_type='General'):
         try:
             if model_type == 'General':
