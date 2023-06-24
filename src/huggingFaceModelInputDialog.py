@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QPushButton, QHBoxLayo
     QSpacerItem, QSizePolicy, QMessageBox
 
 from src.huggingFaceModelClass import HuggingFaceModelClass
-from src.huggingFaceModelLoadingWidget import HuggingFaceModelLoadingWidget
+from src.huggingFaceModelInstallWidget import HuggingFaceModelInstallWidget
 
 
 class HuggingFaceModelInputDialog(QDialog):
@@ -23,7 +23,7 @@ class HuggingFaceModelInputDialog(QDialog):
         self.setWindowTitle('New...')
         self.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint)
 
-        huggingFaceModelLoadingWidget = HuggingFaceModelLoadingWidget(self.__hf_class)
+        huggingFaceModelLoadingWidget = HuggingFaceModelInstallWidget(self.__hf_class)
         huggingFaceModelLoadingWidget.onInstalled.connect(self.__setAccept)
 
         sep = QFrame()

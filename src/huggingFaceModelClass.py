@@ -41,10 +41,15 @@ class HuggingFaceModelClass:
             certain_models_size = sum(list(map(lambda x: x['size_on_disk'], self.getModels(certain_models))))
             return format_size(certain_models_size)
 
-    def installHuggingFaceModel(self, model_name):
+    def installHuggingFaceModel(self, model_name, model_type='General'):
         try:
-            model_class = self.__retrieveModelClassByNameDynamically(model_name)
-            model_class.from_pretrained(model_name)
+            if model_type == 'General':
+                model_class = self.__retrieveModelClassByNameDynamically(model_name)
+                model_class.from_pretrained(model_name)
+            elif model_type == 'Stable Diffusion':
+                from diffusers import StableDiffusionPipeline
+
+                StableDiffusionPipeline.from_pretrained(model_name)
             return [obj for obj in self.getModels() if obj['id'] == model_name]
         except Exception as e:
             raise Exception(e)

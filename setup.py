@@ -23,5 +23,6 @@ setup(
         'PyQt5>=5.14',
         'huggingface_hub',
         'transformers',
+        'diffusers'
     ]
 )
