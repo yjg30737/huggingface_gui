@@ -1,5 +1,9 @@
 import os, sys
 
+from transformers import TRANSFORMERS_CACHE
+
+from src.huggingFacePathWidget import FindPathWidget
+
 # Get the absolute path of the current script file
 script_path = os.path.abspath(__file__)
 
@@ -9,7 +13,7 @@ project_root = os.path.dirname(os.path.dirname(script_path))
 sys.path.insert(0, project_root)
 sys.path.insert(0, os.getcwd())  # Add the current directory as well
 
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal, QSettings
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, \
     QPushButton, QDialog, QMessageBox
@@ -19,6 +23,7 @@ from src.huggingFaceModelInputDialog import HuggingFaceModelInputDialog
 from src.huggingFaceModelTableWidget import HuggingFaceModelTableWidget
 
 QApplication.setWindowIcon(QIcon('hf-logo.svg'))
+
 
 class HuggingFaceModelWidget(QWidget):
     onModelSelected = pyqtSignal(str)
@@ -34,6 +39,11 @@ class HuggingFaceModelWidget(QWidget):
 
     def __initUi(self):
         self.setWindowTitle('HuggingFace Model Table')
+
+        self.__findPathWidget = FindPathWidget()
+        self.__cache_dir = self.__findPathWidget.getCacheDirectory()
+        self.__findPathWidget.onCacheDirSet.connect(self.__setCacheDir)
+
         self.__addBtn = QPushButton('Add')
         self.__delBtn = QPushButton('Delete')
 
@@ -44,6 +54,7 @@ class HuggingFaceModelWidget(QWidget):
 
         lay.addWidget(QLabel('Model Table'))
         lay.addSpacerItem(QSpacerItem(10, 10, QSizePolicy.MinimumExpanding))
+        lay.addWidget(self.__findPathWidget)
         lay.addWidget(self.__addBtn)
         lay.addWidget(self.__delBtn)
         lay.setContentsMargins(0, 0, 0, 0)
@@ -52,17 +63,14 @@ class HuggingFaceModelWidget(QWidget):
         menuWidget.setLayout(lay)
 
         self.__hf_class = HuggingFaceModelClass()
-        models = self.__hf_class.getModels(self.__certain_models)
-
-        if len(models) == 0:
-            self.__delBtn.setEnabled(False)
 
         self.__modelTableWidget = HuggingFaceModelTableWidget()
-        self.__modelTableWidget.addModels(models)
         self.__modelTableWidget.currentCellChanged.connect(self.__currentCellChanged)
 
-        self.__totalSizeLbl = QLabel(f'{self.__total_size_prefix} {self.__hf_class.getModelsSize(self.__certain_models)}')
+        self.__totalSizeLbl = QLabel()
         self.__totalSizeLbl.setAlignment(Qt.AlignRight)
+
+        self.__setCacheDir(self.__cache_dir)
 
         lay = QVBoxLayout()
         lay.addWidget(menuWidget)
@@ -101,6 +109,17 @@ class HuggingFaceModelWidget(QWidget):
             self.onModelSelected.emit(cur_model_name)
         else:
             self.__delBtn.setEnabled(False)
+
+    def __setCacheDir(self, cache_dir):
+        self.__cache_dir = cache_dir
+        self.__modelTableWidget.clearContents()
+        self.__modelTableWidget.setRowCount(0)
+        self.__hf_class.setCacheDir(self.__cache_dir)
+        models = self.__hf_class.getModels(self.__certain_models)
+        if len(models) == 0:
+            self.__delBtn.setEnabled(False)
+        self.__modelTableWidget.addModels(models)
+        self.__totalSizeLbl.setText(f'{self.__total_size_prefix} {self.__hf_class.getModelsSize(self.__certain_models)}')
 
     def getCurrentModelName(self):
         cur_item = self.__modelTableWidget.item(self.__modelTableWidget.currentRow(), 0)

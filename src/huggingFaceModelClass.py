@@ -24,9 +24,12 @@ class HuggingFaceModelClass:
     def __init__(self):
         super(HuggingFaceModelClass, self).__init__()
 
+    def setCacheDir(self, cache_dir):
+        self.__cache_dir = cache_dir
+
     def getModels(self, certain_models=None):
         models = [{"id": i.repo_id, "size_on_disk": i.size_on_disk, "size_on_disk_str": i.size_on_disk_str}
-                    for i in scan_cache_dir().repos]
+                    for i in scan_cache_dir(cache_dir=self.__cache_dir).repos]
         if certain_models is None:
             return models
         else:
@@ -34,37 +37,31 @@ class HuggingFaceModelClass:
                 certain_models) > 0 else certain_models
 
     def getModelsSize(self, certain_models=None):
-        models_size = scan_cache_dir().size_on_disk_str
+        models_size = scan_cache_dir(cache_dir=self.__cache_dir).size_on_disk_str
         if certain_models is None:
             return models_size
         else:
             certain_models_size = sum(list(map(lambda x: x['size_on_disk'], self.getModels(certain_models))))
             return format_size(certain_models_size)
 
+    def installHuggingFaceModel(self, model_name):
+        try:
+            model_class = self.__retrieveModelClassByNameDynamically(model_name)
+            model_class.from_pretrained(model_name, cache_dir=self.__cache_dir)
+            return [obj for obj in self.getModels() if obj['id'] == model_name]
+        except Exception as e:
+            raise Exception(e)
     def is_model_exists(self, model_name):
-        cache_dir_result = scan_cache_dir()
+        cache_dir_result = scan_cache_dir(cache_dir=self.__cache_dir)
         for i in cache_dir_result.repos:
             if model_name == i.repo_id:
                 return True
         return False
 
-    def installHuggingFaceModel(self, model_name, model_type='General'):
-        try:
-            if model_type == 'General':
-                model_class = self.__retrieveModelClassByNameDynamically(model_name)
-                model_class.from_pretrained(model_name)
-            elif model_type == 'Stable Diffusion':
-                from diffusers import StableDiffusionPipeline
-
-                StableDiffusionPipeline.from_pretrained(model_name)
-            return [obj for obj in self.getModels() if obj['id'] == model_name]
-        except Exception as e:
-            raise Exception(e)
-
     def removeHuggingFaceModel(self, model_name: str) -> str:
         try:
             commit_hashes = []
-            cache_dir_result = scan_cache_dir()
+            cache_dir_result = scan_cache_dir(cache_dir=self.__cache_dir)
             for i in cache_dir_result.repos:
                 if model_name == i.repo_id:
                     for j in i.revisions:
@@ -78,7 +75,7 @@ class HuggingFaceModelClass:
             return ''
 
     def __retrieveModelClassByNameDynamically(self, model_name: str):
-        config = AutoConfig.from_pretrained(model_name)
+        config = AutoConfig.from_pretrained(model_name, cache_dir=self.__cache_dir)
         class_name = config.architectures[0]
         # Import the module dynamically
         module = importlib.import_module('transformers')
@@ -88,3 +85,5 @@ class HuggingFaceModelClass:
 
     def getModelObject(self, model_name: str):
         return self.__retrieveModelClassByNameDynamically(model_name)
+
+
