@@ -91,10 +91,16 @@ class FindPathWidget(QWidget):
         dirname = QFileDialog.getExistingDirectory(None, 'Set Path', '', QFileDialog.ShowDirsOnly)
         if dirname:
             self.__cache_dir = dirname
-            self.__pathLineEdit.setText(dirname)
+            self.__handleSettingCacheDir()
 
-            self.__settings_struct.setValue('CACHE_DIR', os.path.normpath(dirname))
-            self.onCacheDirSet.emit(self.__settings_struct.value('CACHE_DIR'))
+    def resetCacheDir(self):
+        self.__cache_dir = TRANSFORMERS_CACHE
+        self.__handleSettingCacheDir()
+
+    def __handleSettingCacheDir(self):
+        self.__pathLineEdit.setText(self.__cache_dir)
+        self.__settings_struct.setValue('CACHE_DIR', os.path.normpath(self.__cache_dir))
+        self.onCacheDirSet.emit(self.__settings_struct.value('CACHE_DIR'))
 
     def setLabel(self, text):
         self.layout().insertWidget(0, QLabel(text))

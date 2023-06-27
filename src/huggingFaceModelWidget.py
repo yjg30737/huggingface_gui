@@ -44,6 +44,9 @@ class HuggingFaceModelWidget(QWidget):
         self.__cache_dir = self.__findPathWidget.getCacheDirectory()
         self.__findPathWidget.onCacheDirSet.connect(self.__setCacheDir)
 
+        self.__resetBtn = QPushButton('Reset Cache Directory')
+        self.__resetBtn.clicked.connect(self.__resetCacheDir)
+
         self.__addBtn = QPushButton('Add')
         self.__delBtn = QPushButton('Delete')
 
@@ -54,7 +57,9 @@ class HuggingFaceModelWidget(QWidget):
 
         lay.addWidget(QLabel('Model Table'))
         lay.addSpacerItem(QSpacerItem(10, 10, QSizePolicy.MinimumExpanding))
+        lay.addWidget(QLabel('Cache Directory'))
         lay.addWidget(self.__findPathWidget)
+        lay.addWidget(self.__resetBtn)
         lay.addWidget(self.__addBtn)
         lay.addWidget(self.__delBtn)
         lay.setContentsMargins(0, 0, 0, 0)
@@ -109,6 +114,9 @@ class HuggingFaceModelWidget(QWidget):
             self.onModelSelected.emit(cur_model_name)
         else:
             self.__delBtn.setEnabled(False)
+
+    def __resetCacheDir(self):
+        self.__findPathWidget.resetCacheDir()
 
     def __setCacheDir(self, cache_dir):
         self.__cache_dir = cache_dir
