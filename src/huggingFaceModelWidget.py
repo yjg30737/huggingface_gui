@@ -67,7 +67,6 @@ class HuggingFaceModelWidget(QWidget):
         menuWidget.setLayout(lay)
 
         self.__hf_class = HuggingFaceModelClass()
-        self.__hf_class.setText2ImageOnly(True)
 
         self.__modelTableWidget = HuggingFaceModelTableWidget()
         self.__modelTableWidget.currentCellChanged.connect(self.__currentCellChanged)
