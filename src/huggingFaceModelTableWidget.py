@@ -62,6 +62,7 @@ class HuggingFaceModelTableWidget(QTableWidget):
 
         self.resizeColumnsToContents()
         self.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.sortByColumn(0, Qt.AscendingOrder)
 
     def getCurrentRowModelName(self):
         return self.item(self.currentRow(), 0).text()
