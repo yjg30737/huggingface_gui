@@ -1,7 +1,7 @@
 import importlib
 
 from huggingface_hub import scan_cache_dir, RepoCard
-from transformers import AutoConfig
+from transformers import AutoConfig, TRANSFORMERS_CACHE
 
 
 def format_size(num: int) -> str:
@@ -23,15 +23,30 @@ class HuggingFaceModelClass:
     """
     def __init__(self):
         super(HuggingFaceModelClass, self).__init__()
+        self.__initVal()
+
+    def __initVal(self):
+        self.__cache_dir = TRANSFORMERS_CACHE
+        self.__text_2_image_only = False
 
     def setCacheDir(self, cache_dir):
         self.__cache_dir = cache_dir
 
+    def setText2ImageOnly(self, f: bool):
+        """
+        this is only applied in "getModels" and "getModelsSize"
+        :param f:
+        :return:
+        """
+        self.__text_2_image_only = f
+
     def getModels(self, certain_models=None):
         models = [{"id": i.repo_id, "size_on_disk": i.size_on_disk, "size_on_disk_str": i.size_on_disk_str,
-                   "is_t2i": 'Yes' if 'text-to-image' in
-                                      RepoCard.load(i.repo_id).data.get('tags', []) else 'No', }
+                   "is_t2i": True if 'text-to-image' in
+                                      RepoCard.load(i.repo_id).data.get('tags', []) else False, }
                     for i in scan_cache_dir(cache_dir=self.__cache_dir).repos]
+        if self.__text_2_image_only:
+            models = [model for model in models if model['is_t2i']]
         if certain_models is None:
             return models
         else:
@@ -40,6 +55,9 @@ class HuggingFaceModelClass:
 
     def getModelsSize(self, certain_models=None):
         models_size = scan_cache_dir(cache_dir=self.__cache_dir).size_on_disk_str
+        if self.__text_2_image_only:
+            text_2_image_only_size = sum(list(map(lambda x: x['size_on_disk'], filter(lambda x: x['is_t2i'], self.getModels(certain_models)))))
+            return format_size(text_2_image_only_size)
         if certain_models is None:
             return models_size
         else:

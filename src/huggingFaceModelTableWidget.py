@@ -54,7 +54,7 @@ class HuggingFaceModelTableWidget(QTableWidget):
 
             # is text2image or something else
             if self.__header_labels.get('Text2Image?', '') != '':
-                is_t2i = model['is_t2i']
+                is_t2i = 'Yes' if model['is_t2i'] else 'No'
                 is_t2i_item = QTableWidgetItem(is_t2i)
                 is_t2i_item.setTextAlignment(Qt.AlignCenter)
                 self.setItem(cur_table_idx, self.__header_labels['Text2Image?'], is_t2i_item)
