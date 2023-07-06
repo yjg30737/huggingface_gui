@@ -1,3 +1,5 @@
+import typing
+
 from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QTableWidget, QHeaderView, QAbstractItemView, QTableWidgetItem, QLabel
@@ -13,9 +15,8 @@ class HuggingFaceModelTableWidget(QTableWidget):
         self.__header_labels = {v: i for (i, v) in enumerate(['Name', 'Size', 'Text2Image?', 'Visit'])}
 
     def __initUi(self):
-        self.setColumnCount(4)
-        self.resizeColumnsToContents()
         self.setHorizontalHeaderLabels(self.__header_labels.keys())
+        self.resizeColumnsToContents()
         self.verticalHeader().setVisible(False)
         self.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -36,33 +37,43 @@ class HuggingFaceModelTableWidget(QTableWidget):
             self.setRowCount(cur_table_idx+1)
             model = models[i]
 
-            # id
             model_id = model['id'] if isinstance(model, dict) else model
-            model_id_item = QTableWidgetItem(model_id)
-            model_id_item.setTextAlignment(Qt.AlignCenter)
-            self.setItem(cur_table_idx, self.__header_labels['Name'], model_id_item)
+
+            # id
+            if self.__header_labels.get('Name', '') != '':
+                model_id_item = QTableWidgetItem(model_id)
+                model_id_item.setTextAlignment(Qt.AlignCenter)
+                self.setItem(cur_table_idx, self.__header_labels['Name'], model_id_item)
 
             # size on disk
-            size_on_disk_str = model['size_on_disk_str']
-            size_on_disk_str_item = QTableWidgetItem(size_on_disk_str)
-            size_on_disk_str_item.setTextAlignment(Qt.AlignCenter)
-            self.setItem(cur_table_idx, self.__header_labels['Size'], size_on_disk_str_item)
+            if self.__header_labels.get('Size', '') != '':
+                size_on_disk_str = model['size_on_disk_str']
+                size_on_disk_str_item = QTableWidgetItem(size_on_disk_str)
+                size_on_disk_str_item.setTextAlignment(Qt.AlignCenter)
+                self.setItem(cur_table_idx, self.__header_labels['Size'], size_on_disk_str_item)
 
             # is text2image or something else
-            is_t2i = model['is_t2i']
-            is_t2i_item = QTableWidgetItem(is_t2i)
-            is_t2i_item.setTextAlignment(Qt.AlignCenter)
-            self.setItem(cur_table_idx, self.__header_labels['Text2Image?'], is_t2i_item)
+            if self.__header_labels.get('Text2Image?', '') != '':
+                is_t2i = model['is_t2i']
+                is_t2i_item = QTableWidgetItem(is_t2i)
+                is_t2i_item.setTextAlignment(Qt.AlignCenter)
+                self.setItem(cur_table_idx, self.__header_labels['Text2Image?'], is_t2i_item)
 
             # visit
-            hyperlink_tag = f'<a href="https://huggingface.co/{model_id}">Link</a>'
-            self.set_hyperlink(cur_table_idx, self.__header_labels['Visit'], hyperlink_tag)
+            if self.__header_labels.get('Visit', '') != '':
+                hyperlink_tag = f'<a href="https://huggingface.co/{model_id}">Link</a>'
+                self.set_hyperlink(cur_table_idx, self.__header_labels['Visit'], hyperlink_tag)
 
-            self.setCurrentItem(model_id_item)
+            self.setCurrentCell(0, 0)
 
         self.resizeColumnsToContents()
         self.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.sortByColumn(0, Qt.AscendingOrder)
+
+    def setHorizontalHeaderLabels(self, labels: typing.Iterable[str]) -> None:
+        self.__header_labels = {v: i for (i, v) in enumerate(labels)}
+        self.setColumnCount(len(self.__header_labels))
+        super(HuggingFaceModelTableWidget, self).setHorizontalHeaderLabels(self.__header_labels.keys())
 
     def getCurrentRowModelName(self):
         return self.item(self.currentRow(), 0).text()
