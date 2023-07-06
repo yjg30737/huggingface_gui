@@ -17,13 +17,19 @@ Note: Some of the models could not be installed. Please tell me specific model i
 * transformers
 * diffusers
 
+## Method Overview
+While using `HuggingFaceModelTableWidget`, you can show specific headers only by `setHorizontalHeaderLabels` as like QTableWidget. 
+
+But i overrided the function so there is only 4 labels possible: Name, Size, Text2Image?, Visit
+
+Also, if you want, you can show text2image models only with `setText2ImageOnly(f: bool)` and you can set the cache directory with `setCacheDir` in `HuggingFaceModelClass`.
 ## How to Run
 1. git clone ~
 2. pip intsall -r requirements.txt
 3. python huggingFaceModelWidget.py
 
 ## Preview
-![image](https://github.com/yjg30737/huggingface_gui/assets/55078043/8b7e9e1b-734f-4d0d-b707-a6bfb4566aaa)
+![image](https://github.com/yjg30737/huggingface_gui/assets/55078043/fa67e162-c193-42b9-9d83-9d39957ca2d6)
 
 ## How to Use
 Press "Add" button to add new model. Dialog will pop up. You can enter the model name you want to install.
