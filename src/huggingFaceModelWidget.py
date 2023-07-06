@@ -1,8 +1,5 @@
-import os, sys
-
-from transformers import TRANSFORMERS_CACHE
-
-from src.huggingFacePathWidget import FindPathWidget
+import os
+import sys
 
 # Get the absolute path of the current script file
 script_path = os.path.abspath(__file__)
@@ -13,7 +10,9 @@ project_root = os.path.dirname(os.path.dirname(script_path))
 sys.path.insert(0, project_root)
 sys.path.insert(0, os.getcwd())  # Add the current directory as well
 
-from PyQt5.QtCore import Qt, pyqtSignal, QSettings
+from src.huggingFacePathWidget import FindPathWidget
+
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, \
     QPushButton, QDialog, QMessageBox

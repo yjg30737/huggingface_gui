@@ -23,8 +23,8 @@ class HuggingFaceModelInputDialog(QDialog):
         self.setWindowTitle('New...')
         self.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint)
 
-        huggingFaceModelLoadingWidget = HuggingFaceModelInstallWidget(self.__hf_class)
-        huggingFaceModelLoadingWidget.onInstalled.connect(self.__setAccept)
+        self.__huggingFaceModelLoadingWidget = HuggingFaceModelInstallWidget(self.__hf_class)
+        self.__huggingFaceModelLoadingWidget.onInstalled.connect(self.__setAccept)
 
         sep = QFrame()
         sep.setFrameShape(QFrame.HLine)
@@ -47,7 +47,7 @@ class HuggingFaceModelInputDialog(QDialog):
         bottomWidget.setLayout(lay)
 
         lay = QVBoxLayout()
-        lay.addWidget(huggingFaceModelLoadingWidget)
+        lay.addWidget(self.__huggingFaceModelLoadingWidget)
         lay.addWidget(sep)
         lay.addWidget(bottomWidget)
 

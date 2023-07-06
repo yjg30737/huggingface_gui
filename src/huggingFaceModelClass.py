@@ -1,6 +1,6 @@
 import importlib
 
-from huggingface_hub import scan_cache_dir
+from huggingface_hub import scan_cache_dir, RepoCard
 from transformers import AutoConfig
 
 
@@ -28,7 +28,9 @@ class HuggingFaceModelClass:
         self.__cache_dir = cache_dir
 
     def getModels(self, certain_models=None):
-        models = [{"id": i.repo_id, "size_on_disk": i.size_on_disk, "size_on_disk_str": i.size_on_disk_str}
+        models = [{"id": i.repo_id, "size_on_disk": i.size_on_disk, "size_on_disk_str": i.size_on_disk_str,
+                   "is_t2i": 'Yes' if 'text-to-image' in
+                                      RepoCard.load(i.repo_id).data.get('tags', []) else 'No', }
                     for i in scan_cache_dir(cache_dir=self.__cache_dir).repos]
         if certain_models is None:
             return models

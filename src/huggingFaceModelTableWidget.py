@@ -6,12 +6,16 @@ from PyQt5.QtWidgets import QTableWidget, QHeaderView, QAbstractItemView, QTable
 class HuggingFaceModelTableWidget(QTableWidget):
     def __init__(self):
         super(HuggingFaceModelTableWidget, self).__init__()
+        self.__initVal()
         self.__initUi()
 
+    def __initVal(self):
+        self.__header_labels = {v: i for (i, v) in enumerate(['Name', 'Size', 'Text2Image?', 'Visit'])}
+
     def __initUi(self):
-        self.setColumnCount(3)
+        self.setColumnCount(4)
         self.resizeColumnsToContents()
-        self.setHorizontalHeaderLabels(['Name', 'Size', 'Visit'])
+        self.setHorizontalHeaderLabels(self.__header_labels.keys())
         self.verticalHeader().setVisible(False)
         self.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -36,17 +40,23 @@ class HuggingFaceModelTableWidget(QTableWidget):
             model_id = model['id'] if isinstance(model, dict) else model
             model_id_item = QTableWidgetItem(model_id)
             model_id_item.setTextAlignment(Qt.AlignCenter)
-            self.setItem(cur_table_idx, 0, model_id_item)
+            self.setItem(cur_table_idx, self.__header_labels['Name'], model_id_item)
 
             # size on disk
             size_on_disk_str = model['size_on_disk_str']
             size_on_disk_str_item = QTableWidgetItem(size_on_disk_str)
             size_on_disk_str_item.setTextAlignment(Qt.AlignCenter)
-            self.setItem(cur_table_idx, 1, size_on_disk_str_item)
+            self.setItem(cur_table_idx, self.__header_labels['Size'], size_on_disk_str_item)
+
+            # is text2image or something else
+            is_t2i = model['is_t2i']
+            is_t2i_item = QTableWidgetItem(is_t2i)
+            is_t2i_item.setTextAlignment(Qt.AlignCenter)
+            self.setItem(cur_table_idx, self.__header_labels['Text2Image?'], is_t2i_item)
 
             # visit
             hyperlink_tag = f'<a href="https://huggingface.co/{model_id}">Link</a>'
-            self.set_hyperlink(cur_table_idx, 2, hyperlink_tag)
+            self.set_hyperlink(cur_table_idx, self.__header_labels['Visit'], hyperlink_tag)
 
             self.setCurrentItem(model_id_item)
 

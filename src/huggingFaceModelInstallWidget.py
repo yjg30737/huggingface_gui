@@ -109,12 +109,5 @@ class HuggingFaceModelInstallWidget(QWidget):
     def __installFailed(self, err_msg):
         QMessageBox.critical(self, "Error", err_msg)
 
-
-# if __name__ == '__main__':
-#     import sys
-#
-#     hf_class = HuggingFaceModelClass()
-#     app = QApplication(sys.argv)
-#     w = HuggingFaceModelLoadingWidget(hf_class)
-#     w.show()
-#     sys.exit(app.exec())
+    def isRunning(self):
+        return self.__t.isRunning()
