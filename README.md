@@ -18,6 +18,8 @@ Note: Some of the models could not be installed. Please tell me specific model i
 * diffusers
 
 ## Method Overview
+When you selects certain model in the tablem, `onModelSelected` signal of `HuggingFaceModelWidget` will be sent.
+
 While using `HuggingFaceModelTableWidget`, you can show specific headers only by `setHorizontalHeaderLabels` as like QTableWidget. 
 
 But i overrided the function so there is only 4 labels possible: Name, Size, Text2Image?, Visit
