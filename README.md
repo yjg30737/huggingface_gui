@@ -23,9 +23,11 @@ When you selects certain model in the table, `onModelSelected` signal of `Huggin
 
 When you set the cache directory with "cache directory" above the table, `onCacheDirSet` signal will be sent.
 
-While using `HuggingFaceModelTableWidget`, you can show specific headers only by `setHorizontalHeaderLabels` as like QTableWidget. 
+While using `HuggingFaceModelTableWidget`, you can show specific headers only by `setHorizontalHeaderLabels` as like QTableWidget.
 
-But i overrided the function so there is only 4 labels possible: Name, Size, Text2Image?, Visit
+You can get `HuggingFaceModelClass` class with `getModelClass` from HuggingFaceModelWidget. You can install or delete certain model and get size of every model in current cache directory. You can do such things with one line. 
+
+But i overrided the function so there is only 4 labels possible: "Name", "Size", "Text2Image?", "Visit"
 
 Also, if you want, you can show text2image models only with `setText2ImageOnly(f: bool)` and you can set the cache directory with `setCacheDir` in `HuggingFaceModelClass`.
 ## How to Run
