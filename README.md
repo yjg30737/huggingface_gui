@@ -27,9 +27,13 @@ While using `HuggingFaceModelTableWidget`, you can show specific headers only by
 
 But i overrided the function so there is only 4 labels possible: "Name", "Size", "Text2Image?", "Visit"
 
-You can get `HuggingFaceModelClass` class with `getModelClass` from HuggingFaceModelWidget. You can install or delete certain model and get size of every model in current cache directory. You can do such things with one line. 
+You can get `HuggingFaceModelClass` class with `getModelClass` from HuggingFaceModelWidget. You can install or delete certain model and get size of every model in current cache directory. You can do such things with one line.
 
-Also, if you want, you can show text2image models only with `setText2ImageOnly(f: bool)` and you can set the cache directory with `setCacheDir` in `HuggingFaceModelClass`.
+Others:
+
+* `getModelTable()` - get the model table widget
+* `selectCurrentModel(model_name)` - set the row including "model" in the table as current one
+* `setText2ImageOnly(f: bool)` - if you want, you can show text2image models only with and you can set the cache directory with `setCacheDir` in `HuggingFaceModelClass`.
 ## How to Run
 1. git clone ~
 2. pip intsall -r requirements.txt
