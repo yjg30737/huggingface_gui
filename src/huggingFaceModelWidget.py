@@ -156,6 +156,9 @@ class HuggingFaceModelWidget(QWidget):
         """
         return self.__hf_class.getModelObject(model_name)
 
+    def getModelClass(self):
+        return self.__hf_class
+
 
 if __name__ == '__main__':
     import sys
