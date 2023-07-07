@@ -156,6 +156,17 @@ class HuggingFaceModelWidget(QWidget):
         """
         return self.__hf_class.getModelObject(model_name)
 
+    def getModelTable(self):
+        return self.__modelTableWidget
+
+    def selectCurrentModel(self, model_name):
+        """
+        select the row which has "model_name" as an Name
+        """
+        items = self.__modelTableWidget.findItems(model_name, Qt.MatchExactly)
+        if len(items) > 0:
+            self.__modelTableWidget.setCurrentCell(items[0].row(), 0)
+
     def getModelClass(self):
         return self.__hf_class
 
