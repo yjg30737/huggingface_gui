@@ -44,7 +44,7 @@ class HuggingFaceModelWidget(QWidget):
 
         self.__findPathWidget = FindPathWidget()
         self.__cache_dir = self.__findPathWidget.getCacheDirectory()
-        self.__findPathWidget.onCacheDirSet.connect(self.__setCacheDir)
+        self.__findPathWidget.onCacheDirSet.connect(self.setCacheDir)
 
         self.__resetBtn = QPushButton('Reset Cache Directory')
         self.__resetBtn.clicked.connect(self.__resetCacheDir)
@@ -77,7 +77,7 @@ class HuggingFaceModelWidget(QWidget):
         self.__totalSizeLbl = QLabel()
         self.__totalSizeLbl.setAlignment(Qt.AlignRight)
 
-        self.__setCacheDir(self.__cache_dir)
+        self.setCacheDir(self.__cache_dir)
 
         lay = QVBoxLayout()
         lay.addWidget(menuWidget)
@@ -123,7 +123,7 @@ class HuggingFaceModelWidget(QWidget):
     def __resetCacheDir(self):
         self.__findPathWidget.resetCacheDir()
 
-    def __setCacheDir(self, cache_dir):
+    def setCacheDir(self, cache_dir):
         self.__cache_dir = cache_dir
         self.__modelTableWidget.clearContents()
         self.__modelTableWidget.setRowCount(0)
