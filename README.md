@@ -32,7 +32,7 @@ You can get `HuggingFaceModelClass` class with `getModelClass` from HuggingFaceM
 Others:
 
 * `getModelTable()` - get the model table widget
-* `selectCurrentModel(model_name)` - set the row including "model" in the table as current one
+* `selectCurrentModel(model_name)` - select the row including "model" in the table programmatically
 * `setText2ImageOnly(f: bool)` - if you want, you can show text2image models only with and you can set the cache directory with `setCacheDir` in `HuggingFaceModelClass`.
 ## How to Run
 1. git clone ~
