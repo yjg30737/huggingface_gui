@@ -25,6 +25,8 @@ QApplication.setWindowIcon(QIcon('hf-logo.svg'))
 
 
 class HuggingFaceModelWidget(QWidget):
+    onModelAdded = pyqtSignal(str)
+    onModelDeleted = pyqtSignal(str)
     onModelSelected = pyqtSignal(str)
 
     def __init__(self, certain_models=None, parent=None):
@@ -94,16 +96,19 @@ class HuggingFaceModelWidget(QWidget):
                 # add model in the table
                 self.__modelTableWidget.addModels([model])
                 self.__totalSizeLbl.setText(f'{self.__total_size_prefix} {self.__hf_class.getModelsSize(self.__certain_models)}')
+                self.onModelAdded.emit(model)
             except Exception as e:
                 QMessageBox.critical(self, "Error", str(e))
 
     def __deleteClicked(self):
-        self.__hf_class.removeHuggingFaceModel(self.__modelTableWidget.getCurrentRowModelName())
+        model_name = self.__modelTableWidget.getCurrentRowModelName()
+        self.__hf_class.removeHuggingFaceModel(model_name)
         cur_row = self.__modelTableWidget.currentRow()
         self.__modelTableWidget.removeRow(cur_row)
         self.__totalSizeLbl.setText(f'{self.__total_size_prefix} {self.__hf_class.getModelsSize(self.__certain_models)}')
         self.__modelTableWidget.setCurrentCell(max(0, min(cur_row, self.__modelTableWidget.rowCount()-1)), 0)
         self.__delBtn.setEnabled(self.__modelTableWidget.rowCount() != 0)
+        self.onModelDeleted.emit(model_name)
 
     def __currentCellChanged(self, currentRow, currentColumn, previousRow, previousColumn):
         cur_item = self.__modelTableWidget.item(currentRow, 0)
