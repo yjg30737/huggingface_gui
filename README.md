@@ -19,7 +19,7 @@ Note: Some of the models could not be installed. Please tell me specific model i
 
 ## Method Overview
 When you selects certain model in the table, `onModelSelected` signal of `HuggingFaceModelWidget` will be sent.
-`onModelAdded`, `onModelDelted` are supported as well. self-explanatory i believe.
+`onModelAdded`, `onModelDeleted` are supported as well. self-explanatory i believe.
 
 While using `HuggingFaceModelTableWidget`, you can show specific headers only by `setHorizontalHeaderLabels` as like QTableWidget. 
 
