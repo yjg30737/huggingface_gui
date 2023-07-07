@@ -89,6 +89,7 @@ class HuggingFaceModelInstallWidget(QWidget):
 
         self.__t.started.connect(self.thread_started)
         self.__t.finished.connect(self.thread_finished)
+        self.__t.finished.connect(self.__t.deleteLater)
         self.__t.installFinished.connect(self.__installFinished)
         self.__t.installFailed.connect(self.__installFailed)
         self.__t.start()
