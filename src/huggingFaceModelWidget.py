@@ -28,6 +28,7 @@ class HuggingFaceModelWidget(QWidget):
     onModelAdded = pyqtSignal(str)
     onModelDeleted = pyqtSignal(str)
     onModelSelected = pyqtSignal(str)
+    onCacheDirSet = pyqtSignal(str)
 
     def __init__(self, certain_models=None, parent=None):
         super(HuggingFaceModelWidget, self).__init__(parent)
@@ -132,6 +133,7 @@ class HuggingFaceModelWidget(QWidget):
             self.__delBtn.setEnabled(False)
         self.__modelTableWidget.addModels(models)
         self.__totalSizeLbl.setText(f'{self.__total_size_prefix} {self.__hf_class.getModelsSize(self.__certain_models)}')
+        self.onCacheDirSet.emit(cache_dir)
 
     def getCurrentModelName(self):
         cur_item = self.__modelTableWidget.item(self.__modelTableWidget.currentRow(), 0)
